@@ -1,3 +1,4 @@
+import { commandCurrent } from "./command_current.js";
 import { commandExit } from "./command_exit.js";
 import { commandHelp } from "./command_help.js";
 import { CLICommand } from "./state.js";
@@ -13,6 +14,11 @@ export function getCommands(): Record<string, CLICommand> {
             name: "help",
             description: "Displays a help message",
             callback: commandHelp,
+        },
+        current: {
+            name: "current",
+            description: "Displays current weather in a city",
+            callback: commandCurrent,
         }
     }
 }

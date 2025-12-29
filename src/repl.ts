@@ -14,8 +14,9 @@ export function startREPL(state: State) {
         }
 
         if (received[0] in commands) {
-            const cmd = commands[received[0]]
-            await cmd.callback(state);
+            const cmd = commands[received[0]];
+            const args = received.slice(1);
+            await cmd.callback(state, ...args);
         } else {
             console.log("Unkown command")
         }
