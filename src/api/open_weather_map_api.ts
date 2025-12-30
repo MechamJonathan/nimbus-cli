@@ -58,7 +58,7 @@ export class OpenWeatherMapAPI {
 
     private async fetchWeather(
         location: Location, 
-        units: "metric" | "imperial" = "imperial"
+        units: "metric" | "imperial"
     ) {
         const cacheKey = `weather:${location.lat},${location.lon},${units}`;
         const cached = this.cache.get<WeatherReport>(cacheKey);
