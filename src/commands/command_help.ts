@@ -1,4 +1,4 @@
-import { State } from "./state";
+import { State } from "../cli/state.js";
 
 export function commandHelp(state: State) {
     console.log();

@@ -1,6 +1,6 @@
 import { createInterface, type Interface } from "readline";
-import { getCommands } from "./commands.js";
-import { OpenWeatherMapAPI } from "./open_weather_map_api.js";
+import { getCommands } from "../commands/commands.js";
+import { OpenWeatherMapAPI } from "../api/open_weather_map_api.js";
 
 export type CLICommand = {
     name: string;
@@ -14,7 +14,7 @@ export type State = {
     openWeatherMapAPI: OpenWeatherMapAPI,
 }
 
-export function initState(): State {
+export function initState(cacheInterval: number): State {
     const rl = createInterface({
         input: process.stdin,
         output: process.stdout,
@@ -26,6 +26,6 @@ export function initState(): State {
     return {
         readline: rl,
         registry: commands,
-        openWeatherMapAPI: new OpenWeatherMapAPI(),
+        openWeatherMapAPI: new OpenWeatherMapAPI(cacheInterval),
     }
 }

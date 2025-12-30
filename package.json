@@ -25,5 +25,8 @@
     "@types/node": "^25.0.3",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3"
   }
 }
