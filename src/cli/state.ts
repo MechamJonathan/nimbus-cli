@@ -1,6 +1,7 @@
 import { createInterface, type Interface } from "readline";
 import { getCommands } from "../commands/commands.js";
 import { OpenWeatherMapAPI } from "../api/open_weather_map_api.js";
+import { Location } from "src/types/weather.js";
 
 export type CLICommand = {
     name: string;
@@ -13,6 +14,7 @@ export type State = {
     registry: Record<string, CLICommand>,
     openWeatherMapAPI: OpenWeatherMapAPI,
     units: "metric" | "imperial";
+    summaryList: Record<string, Location>
 
 };
 
@@ -30,5 +32,6 @@ export function initState(cacheInterval: number): State {
         registry: commands,
         openWeatherMapAPI: new OpenWeatherMapAPI(cacheInterval),
         units: "imperial",
+        summaryList: {},
     };
 };

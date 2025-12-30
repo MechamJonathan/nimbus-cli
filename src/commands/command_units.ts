@@ -12,6 +12,7 @@ export async function commandUnits(state: State, ...args: string[]): Promise<voi
         console.log("Units set to Celcius");
     } else if (input === "f" || input === "fahrenheit") {
         state.units = "imperial";
+        console.log("Units set to Fahrenheit");
     } else {
         console.log("Unkown units. Use 'c'/'celcius' or 'f'/fahrenheit'");
     }

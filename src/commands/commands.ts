@@ -3,6 +3,9 @@ import { commandExit } from "./command_exit.js";
 import { commandHelp } from "./command_help.js";
 import { CLICommand } from "../cli/state.js";
 import { commandUnits } from "./command_units.js";
+import { commandAdd } from "./command_add.js";
+import { commandSummary } from "./command_summary.js";
+import { commandRemove } from "./command_remove.js";
 
 export function getCommands(): Record<string, CLICommand> {
     return {
@@ -22,7 +25,7 @@ export function getCommands(): Record<string, CLICommand> {
     Usage: weather <city> [state] [country]
         Examples:
         weather Oslo
-        weather Nashville TN US`,
+        weather Salt Lake City UT US`,
             callback: commandWeather,
         },
         units: {
@@ -34,6 +37,31 @@ export function getCommands(): Record<string, CLICommand> {
         units f      # Fahrenheit
     To see the current units, run 'units' without arguments.`,
             callback: commandUnits,
+        },
+        add: {
+            name: "add",
+            description: `add location to summary list.
+    Usage: add <city> [state] [country]
+        Examples:
+        add Oslo
+        add Salt Lake City UT US`,
+            callback: commandAdd,
+        },
+        remove: {
+            name: "remove",
+            description: `remove location from summary list.
+    Usage: remove <city> [state] [country]
+        Examples:
+        remove Oslo
+        remove Salt Lake City UT US`,
+            callback: commandRemove,
+        },
+        summary: {
+            name: "summary",
+            description: `Display summary list weather report
+    Usage: summary`,
+            callback: commandSummary,
         }
+
     }
 }

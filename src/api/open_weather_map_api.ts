@@ -20,7 +20,7 @@ export class OpenWeatherMapAPI {
         this.cache.stopReapLoop();
     }
 
-    private async fetchLocation( 
+    async fetchLocation( 
         city: string, 
         state?: string,
         country?: string
