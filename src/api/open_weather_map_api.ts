@@ -56,15 +56,18 @@ export class OpenWeatherMapAPI {
         }
     }
 
-    private async fetchWeather(location: Location) {
-        const cacheKey = `weather:${location.lat},${location.lon}`;
+    private async fetchWeather(
+        location: Location, 
+        units: "metric" | "imperial" = "imperial"
+    ) {
+        const cacheKey = `weather:${location.lat},${location.lon},${units}`;
         const cached = this.cache.get<WeatherReport>(cacheKey);
         if (cached) {
             return cached;
         }
 
         const fullURL = OpenWeatherMapAPI.baseURL + 
-            `lat=${location.lat}&lon=${location.lon}&appid=${this.apiKey}`;
+            `lat=${location.lat}&lon=${location.lon}&appid=${this.apiKey}&units=${units}`;
 
         try {
             const resp = await fetch(fullURL);
@@ -83,13 +86,14 @@ export class OpenWeatherMapAPI {
     async fetchWeatherByCity(
         city: string, 
         state?: string, 
-        country?: string
+        country?: string,
+        units: "metric" | "imperial" = "imperial",
     ): Promise<{
         location: Location;
         weather: WeatherReport;
         }> {
         const location = await this.fetchLocation(city, state, country);
-        const weather = await this.fetchWeather(location)
+        const weather = await this.fetchWeather(location, units);
 
         return { location, weather};
     }
