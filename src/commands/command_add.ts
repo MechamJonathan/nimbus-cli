@@ -1,7 +1,6 @@
 import { State } from "../cli/state.js";
-import { parseCityFromTokens } from "../utils/parseCity.js";
+import { parseCityFromTokens } from "../utils/parseCityFromTokens.js";
 import { makeLocationKey } from "../utils/makeLocationKey.js"; 
-
 
 export async function commandAdd(state: State, ...args: string[]): Promise<void> {
     if (args.length < 1) {

@@ -1,7 +1,6 @@
 import { State } from "../cli/state.js";
 import { formatWeatherReport } from "../utils/formatWeatherReport.js";
 
-
 export async function commandSummary(state: State) {
     const locations = Object.values(state.summaryList);
     if (locations.length === 0) {

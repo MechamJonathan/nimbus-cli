@@ -1,6 +1,6 @@
 import { State } from "../cli/state.js";
 
-export function commandHelp(state: State) {
+export async function commandHelp(state: State) {
     console.log();
     console.log("Welcome to Nimbus CLI!");
     console.log("Usage:");

@@ -1,4 +1,4 @@
-import { parseCityFromTokens } from "../utils/parseCity.js";
+import { parseCityFromTokens } from "../utils/parseCityFromTokens.js";
 import { State } from "../cli/state.js";
 import { formatWeatherReport } from "../utils/formatWeatherReport.js";
 
