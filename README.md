@@ -58,22 +58,22 @@ Type commands at the ```NimbusCLI >``` prompt.
 
 ### Core Commands
 - ```help```
-  - show available commands and usage examples
+  - show available commands and usage examples.
 
 - ```weather <city> [state] [country]```
   - Get current weather for a city.
 
 - ```units <c|f>```
-  - Set preferred units for furture calls
+  - Set preferred units for furture calls.
 
 - ```add <city> [state] [country]```
-  - add city to summary list
+  - add city to summary list.
 
 - ```remove <city> [state] [country]```
-  - remove city from summary list
+  - remove city from summary list.
  
 - ```summary```
-  - Get current weather for all locations in summary list
+  - Get current weather for all locations in summary list.
  
 ### Testing
 ```npm test```
