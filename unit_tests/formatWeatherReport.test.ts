@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { formatWeatherReport } from "../utils/formatWeatherReport.js";
-import { State } from "../cli/state.js";
+import { formatWeatherReport } from "../src/utils/formatWeatherReport.js";
+import { State } from "../src/cli/state.js";
 
 function createTestState(overrides: Partial<State> = {}): State {
   return {

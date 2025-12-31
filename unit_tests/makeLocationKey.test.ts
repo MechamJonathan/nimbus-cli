@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { makeLocationKey } from "../utils/makeLocationKey.js";
+import { makeLocationKey } from "../src/utils/makeLocationKey.js";
 
 describe("makeLocationKey", () => {
   test("normalizes city and lowercases it", () => {

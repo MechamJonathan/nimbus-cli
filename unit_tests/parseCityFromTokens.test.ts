@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { parseCityFromTokens } from "../utils/parseCityFromTokens.js";
+import { parseCityFromTokens } from "../src/utils/parseCityFromTokens.js";
 
 describe("parseCityFromTokens", () => {
   test("throws when no tokens are provided", () => {

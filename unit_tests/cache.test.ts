@@ -1,4 +1,4 @@
-import { Cache } from "../api/cache.js";
+import { Cache } from "../src/api/cache.js";
 import { test, expect } from "vitest";
 
 test.concurrent.each([
