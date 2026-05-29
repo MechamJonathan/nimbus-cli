@@ -1,4 +1,4 @@
-import { State } from "src/cli/state";
+import { State } from "../cli/state.js";
 
 export async function commandUnits(state: State, ...args: string[]): Promise<void> {
     if (args.length < 1) {
