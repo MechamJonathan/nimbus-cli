@@ -47,7 +47,10 @@ export class OpenWeatherMapAPI {
             }
 
             const data = (await resp.json()) as Location[];
-            const location = data[0]
+            if (data.length === 0) {
+                throw new Error(`Location "${query}" not found`);
+            }
+            const location = data[0];
 
             this.cache.add<Location>(cacheKey, location);
             return location;
