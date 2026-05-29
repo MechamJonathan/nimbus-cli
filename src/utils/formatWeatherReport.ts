@@ -1,5 +1,5 @@
-import { State } from "src/cli/state.js";
-import { WeatherReport } from "src/types/weather.js";
+import { State } from "../cli/state.js";
+import { WeatherReport } from "../types/weather.js";
 
 export function formatWeatherReport(
     state: State,
