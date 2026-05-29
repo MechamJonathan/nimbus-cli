@@ -1,7 +1,8 @@
-import { createInterface, type Interface } from "readline";
+import { createInterface, type Interface } from "node:readline";
 import { getCommands } from "../commands/commands.js";
 import { OpenWeatherMapAPI } from "../api/open_weather_map_api.js";
-import { Location } from "src/types/weather.js";
+import { Location } from "../types/weather.js";
+import { loadSummaryList } from "../utils/summaryListStore.js";
 
 export type CLICommand = {
     name: string;
@@ -32,6 +33,6 @@ export function initState(cacheInterval: number): State {
         registry: commands,
         openWeatherMapAPI: new OpenWeatherMapAPI(cacheInterval),
         units: "imperial",
-        summaryList: {},
+        summaryList: loadSummaryList(),
     };
 };
