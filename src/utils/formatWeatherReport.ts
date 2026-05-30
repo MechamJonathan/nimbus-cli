@@ -23,25 +23,6 @@ export function colorCondition(main: string): string {
     return pc.green(main.toUpperCase());
 }
 
-// ─── box drawing ──────────────────────────────────────────────────────────────
-
-function box(lines: string[], width: number): string {
-    const g = (s: string) => pc.green(s);
-    const top    = g("╔" + "═".repeat(width + 2) + "╗");
-    const mid    = g("╠" + "═".repeat(width + 2) + "╣");
-    const bot    = g("╚" + "═".repeat(width + 2) + "╝");
-    const row    = (s: string) => g("║") + " " + s + " " + g("║");
-
-    const padded = lines.map((line, i) => {
-        const visible = line.replace(/\x1b\[[0-9;]*m/g, "");
-        const pad = width - visible.length;
-        return row(line + " ".repeat(Math.max(0, pad)));
-    });
-
-    const [first, ...rest] = padded;
-    return [top, first, mid, ...rest, bot].join("\n");
-}
-
 // ─── main formatter ───────────────────────────────────────────────────────────
 
 export function formatWeatherReport(
@@ -87,21 +68,12 @@ export function formatWeatherReport(
         `  ${label("SUNSET")}  ${arrow} ${pc.yellow(sunsetStr)}`,
     ];
 
-    const classifiedBanner = pc.bold(pc.green("CLASSIFIED // EYES ONLY".padStart(13)));
-    const targetLine       = `${pc.dim(pc.green("TARGET :"))} ${pc.bold(pc.cyan(location))}`;
+    const targetLine = `  ${pc.dim(pc.green("TARGET :"))} ${pc.bold(pc.cyan(location))}`;
+    const divider    = pc.dim(pc.green("  " + "─".repeat(44)));
+    const body       = rows.join("\n");
+    const footer     = pc.dim(pc.green(`${"─".repeat(4)} TRANSMISSION ENDS ${"─".repeat(4)}`));
 
-    // measure box width from longest visible row
-    const allLines    = [classifiedBanner, targetLine, ...rows];
-    const boxWidth    = allLines.reduce((max, line) => {
-        const visible = line.replace(/\x1b\[[0-9;]*m/g, "");
-        return Math.max(max, visible.length);
-    }, 0);
-
-    const header = box([classifiedBanner, targetLine], boxWidth);
-    const body   = rows.join("\n");
-    const footer = pc.dim(pc.green(`${"─".repeat(4)} TRANSMISSION ENDS ${"─".repeat(4)}`));
-
-    return [header, "", body, "", `  ${footer}`].join("\n");
+    return [targetLine, divider, "", body, "", `  ${footer}`].join("\n");
 }
 
 // ─── utilities ────────────────────────────────────────────────────────────────
