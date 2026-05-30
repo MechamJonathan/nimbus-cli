@@ -1,7 +1,7 @@
 import { State } from "../cli/state.js";
 import { parseCityFromTokens } from "../utils/parseCityFromTokens.js";
-import { makeLocationKey } from "../utils/makeLocationKey.js"; 
-import { normalize } from "node:path";
+import { makeLocationKey } from "../utils/makeLocationKey.js";
+import { saveConfig } from "../utils/configStore.js";
 
 export async function commandRemove(state: State, ...args: string[]): Promise<void> {
     if (args.length === 0) {
@@ -33,6 +33,7 @@ export async function commandRemove(state: State, ...args: string[]): Promise<vo
     }
 
     delete state.summaryList[key];
+    saveConfig({ units: state.units, summaryList: state.summaryList });
 
     console.log(
         `${location.name}${location.state ? ", " + location.state : ""}, ${location.country} removed from summary list.`

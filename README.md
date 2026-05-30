@@ -7,7 +7,7 @@ NimbusCLI is a Node.js command-line weather assistant that uses the OpenWeather 
 - Interactive REPL interface (`NimbusCli > ` prompt)
 - Current weather by city (and optionally by state and/or country)
 - Configurable units: metric or imperial
-- Summary list of saved locations
+- Summary list of saved locations, persisted across sessions in `~/.nimbus-cli/summary.json`
 - In‑memory caching with TTL to reduce API calls
 - Helpful `help` command with usage info
 - Graceful error handling and input validation
@@ -74,6 +74,8 @@ Type commands at the ```NimbusCLI >``` prompt.
  
 - ```summary```
   - Get current weather for all locations in summary list.
+
+> **Note:** locations added via `add` are saved to `~/.nimbus-cli/summary.json` and restored automatically the next time you start NimbusCLI.
  
 ### Testing
 ```npm test```

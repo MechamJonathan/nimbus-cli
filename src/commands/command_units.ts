@@ -1,4 +1,5 @@
-import { State } from "src/cli/state";
+import { State } from "../cli/state.js";
+import { saveConfig } from "../utils/configStore.js";
 
 export async function commandUnits(state: State, ...args: string[]): Promise<void> {
     if (args.length < 1) {
@@ -7,13 +8,15 @@ export async function commandUnits(state: State, ...args: string[]): Promise<voi
     }
 
     const input = args[0];
-    if (input === "c" || input === "celcius") {
+    if (input === "c" || input === "celsius") {
         state.units = "metric";
-        console.log("Units set to Celcius");
+        console.log("Units set to Celsius");
     } else if (input === "f" || input === "fahrenheit") {
         state.units = "imperial";
         console.log("Units set to Fahrenheit");
     } else {
-        console.log("Unkown units. Use 'c'/'celcius' or 'f'/fahrenheit'");
+        console.log("Unknown units. Use 'c'/'celsius' or 'f'/'fahrenheit'");
+        return;
     }
+    saveConfig({ units: state.units, summaryList: state.summaryList });
 }
