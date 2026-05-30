@@ -68,12 +68,11 @@ export function formatWeatherReport(
         `  ${label("SUNSET")}  ${arrow} ${pc.yellow(sunsetStr)}`,
     ];
 
-    const targetLine = `  ${pc.dim(pc.green("TARGET :"))} ${pc.bold(pc.cyan(location))}`;
+    const targetLine = `  ${pc.dim(pc.green("LOCATION :"))} ${pc.bold(pc.cyan(location))}`;
     const divider    = pc.dim(pc.green("  " + "─".repeat(44)));
     const body       = rows.join("\n");
-    const footer     = pc.dim(pc.green(`${"─".repeat(4)} TRANSMISSION ENDS ${"─".repeat(4)}`));
 
-    return [targetLine, divider, "", body, "", `  ${footer}`].join("\n");
+    return [targetLine, divider, "", body].join("\n");
 }
 
 // ─── utilities ────────────────────────────────────────────────────────────────
