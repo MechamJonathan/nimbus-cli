@@ -1,7 +1,7 @@
 import { State } from "../cli/state.js";
 import { parseCityFromTokens } from "../utils/parseCityFromTokens.js";
 import { makeLocationKey } from "../utils/makeLocationKey.js";
-import { saveSummaryList } from "../utils/summaryListStore.js";
+import { saveConfig } from "../utils/configStore.js";
 
 export async function commandAdd(state: State, ...args: string[]): Promise<void> {
     if (args.length < 1) {
@@ -27,6 +27,6 @@ export async function commandAdd(state: State, ...args: string[]): Promise<void>
     }
 
     state.summaryList[key] = location;
-    saveSummaryList(state.summaryList);
+    saveConfig({ units: state.units, summaryList: state.summaryList });
     console.log(`${location.name}${location.state ? ", " + location.state : ""}, ${location.country} added to summary list.`);
 }

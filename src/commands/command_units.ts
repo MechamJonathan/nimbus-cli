@@ -1,4 +1,5 @@
 import { State } from "../cli/state.js";
+import { saveConfig } from "../utils/configStore.js";
 
 export async function commandUnits(state: State, ...args: string[]): Promise<void> {
     if (args.length < 1) {
@@ -15,5 +16,7 @@ export async function commandUnits(state: State, ...args: string[]): Promise<voi
         console.log("Units set to Fahrenheit");
     } else {
         console.log("Unknown units. Use 'c'/'celsius' or 'f'/'fahrenheit'");
+        return;
     }
+    saveConfig({ units: state.units, summaryList: state.summaryList });
 }
