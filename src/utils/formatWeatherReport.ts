@@ -1,5 +1,48 @@
 import { State } from "../cli/state.js";
 import { WeatherReport } from "../types/weather.js";
+import pc from "picocolors";
+
+// ─── color helpers ────────────────────────────────────────────────────────────
+
+export function colorTemp(temp: number, units: "metric" | "imperial"): string {
+    const c = units === "metric" ? temp : (temp - 32) * 5 / 9;
+    const s = `${temp.toFixed(1)}`;
+    if (c <= 0)  return pc.cyan(s);
+    if (c <= 15) return pc.blue(s);
+    if (c <= 27) return pc.yellow(s);
+    return pc.red(s);
+}
+
+export function colorCondition(main: string): string {
+    const m = main.toLowerCase();
+    if (m.includes("thunder"))              return pc.red(main.toUpperCase());
+    if (m.includes("rain") || m.includes("drizzle")) return pc.cyan(main.toUpperCase());
+    if (m.includes("snow"))                 return pc.bold(pc.white(main.toUpperCase()));
+    if (m.includes("clear"))                return pc.yellow(main.toUpperCase());
+    if (m.includes("cloud"))                return pc.white(main.toUpperCase());
+    return pc.green(main.toUpperCase());
+}
+
+// ─── box drawing ──────────────────────────────────────────────────────────────
+
+function box(lines: string[], width: number): string {
+    const g = (s: string) => pc.green(s);
+    const top    = g("╔" + "═".repeat(width + 2) + "╗");
+    const mid    = g("╠" + "═".repeat(width + 2) + "╣");
+    const bot    = g("╚" + "═".repeat(width + 2) + "╝");
+    const row    = (s: string) => g("║") + " " + s + " " + g("║");
+
+    const padded = lines.map((line, i) => {
+        const visible = line.replace(/\x1b\[[0-9;]*m/g, "");
+        const pad = width - visible.length;
+        return row(line + " ".repeat(Math.max(0, pad)));
+    });
+
+    const [first, ...rest] = padded;
+    return [top, first, mid, ...rest, bot].join("\n");
+}
+
+// ─── main formatter ───────────────────────────────────────────────────────────
 
 export function formatWeatherReport(
     state: State,
@@ -8,53 +51,69 @@ export function formatWeatherReport(
     weather: WeatherReport,
     stateCode?: string
 ): string {
-    const {temp, feels_like, temp_min, temp_max, pressure, humidity } =
-    weather.main;
-
-    const condition = weather.weather?.[0]?.main ?? "Unknown";
-    const description = weather.weather?.[0]?.description ?? "";
+    const { temp, feels_like, temp_min, temp_max, pressure, humidity } = weather.main;
+    const condition    = weather.weather?.[0]?.main ?? "Unknown";
+    const description  = weather.weather?.[0]?.description ?? "";
     const { speed: windSpeed = 0, deg: windDeg = 0, gust: windGust = 0 } = weather.wind ?? {};
-    const { all: clouds = 0 } = weather.clouds ?? {};
-    const visibility = weather.visibility ?? 0;
+    const { all: clouds = 0 }  = weather.clouds ?? {};
+    const visibility   = weather.visibility ?? 0;
+    const { sunrise, sunset }  = weather.sys ?? {};
+    const timezoneOffset       = weather.timezone ?? 0;
 
-    const {sunrise, sunset, country: sysCountry } = weather.sys ?? {};
-    const timezoneOffset = weather.timezone ?? 0;
-
-    const tempUnit = state.units === "metric" ? "°C" : "°F";
+    const tempUnit  = state.units === "metric" ? "°C" : "°F";
     const speedUnit = state.units === "metric" ? "m/s" : "mph";
-    const headerLine = stateCode 
-        ? `Weather in ${city}, ${stateCode}, ${country}` 
-        : `Weather in ${city}, ${country}`;
+
+    const location = stateCode
+        ? `${city.toUpperCase()}, ${stateCode.toUpperCase()}, ${country.toUpperCase()}`
+        : `${city.toUpperCase()}, ${country.toUpperCase()}`;
 
     const sunriseStr = formatLocalTime(sunrise, timezoneOffset);
-    const sunsetStr = formatLocalTime(sunset, timezoneOffset);
+    const sunsetStr  = formatLocalTime(sunset,  timezoneOffset);
 
+    const arrow = pc.green("▸");
+    const label = (s: string) => pc.dim(pc.green(s.padEnd(11)));
+    const muted = (s: string) => pc.dim(s);
 
-    return `
-${headerLine}
-────────────────────────────
-Condition   : ${condition} (${description})
-Temperature : ${temp.toFixed(1)}${tempUnit} (feels like ${feels_like.toFixed(1)}${tempUnit})
-Low / High  : ${temp_min.toFixed(1)}${tempUnit} / ${temp_max.toFixed(1)}${tempUnit}
-Humidity    : ${humidity}%
-Pressure    : ${pressure} hPa
-Wind        : ${windSpeed} ${speedUnit} ${degToCompass(windDeg)} (gust ${windGust} ${speedUnit})
-Cloudiness  : ${clouds}%
-Visibility  : ${(visibility / 1000).toFixed(1)} km
-Sunrise     : ${sunriseStr}
-Sunset      : ${sunsetStr}
-`.trim();
+    const rows = [
+        `  ${label("STATUS")}  ${arrow} ${colorCondition(condition)}  ${muted(`(${description})`)}`,
+        `  ${label("TEMPERATURE")}  ${arrow} ${colorTemp(temp, state.units)}${tempUnit}  ${muted(`[ feels like ${colorTemp(feels_like, state.units)}${tempUnit} ]`)}`,
+        `  ${label("RANGE")}  ${arrow} ${colorTemp(temp_min, state.units)}${tempUnit} ${muted("—")} ${colorTemp(temp_max, state.units)}${tempUnit}`,
+        `  ${label("HUMIDITY")}  ${arrow} ${humidity}%`,
+        `  ${label("PRESSURE")}  ${arrow} ${pressure} hPa`,
+        `  ${label("WIND")}  ${arrow} ${windSpeed} ${speedUnit} ${degToCompass(windDeg)}  ${muted(`[ gust ${windGust} ${speedUnit} ]`)}`,
+        `  ${label("CLOUD COVER")}  ${arrow} ${clouds}%`,
+        `  ${label("VISIBILITY")}  ${arrow} ${(visibility / 1000).toFixed(1)} km`,
+        `  ${label("SUNRISE")}  ${arrow} ${pc.yellow(sunriseStr)}`,
+        `  ${label("SUNSET")}  ${arrow} ${pc.yellow(sunsetStr)}`,
+    ];
+
+    const classifiedBanner = pc.bold(pc.green("CLASSIFIED // EYES ONLY".padStart(13)));
+    const targetLine       = `${pc.dim(pc.green("TARGET :"))} ${pc.bold(pc.cyan(location))}`;
+
+    // measure box width from longest visible row
+    const allLines    = [classifiedBanner, targetLine, ...rows];
+    const boxWidth    = allLines.reduce((max, line) => {
+        const visible = line.replace(/\x1b\[[0-9;]*m/g, "");
+        return Math.max(max, visible.length);
+    }, 0);
+
+    const header = box([classifiedBanner, targetLine], boxWidth);
+    const body   = rows.join("\n");
+    const footer = pc.dim(pc.green(`${"─".repeat(4)} TRANSMISSION ENDS ${"─".repeat(4)}`));
+
+    return [header, "", body, "", `  ${footer}`].join("\n");
 }
 
-export function degToCompass(num: number) {
-        const val = Math.floor((num / 22.5) + 0.5);
-        const arr = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
-        return arr[val % 16];
+// ─── utilities ────────────────────────────────────────────────────────────────
+
+export function degToCompass(num: number): string {
+    const val = Math.floor((num / 22.5) + 0.5);
+    const arr = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+    return arr[val % 16];
 }
 
 export function formatLocalTime(timestamp?: number, timezoneOffset?: number): string {
     if (!timestamp || timezoneOffset === undefined) return "N/A";
-
     const date = new Date((timestamp + timezoneOffset) * 1000);
     return date.toUTCString().slice(-12, -4);
 }
