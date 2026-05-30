@@ -5,6 +5,7 @@ export type Location = {
     lon: number;
     country: string;
     state?: string;
+    local_names?: Record<string, string>;
 };
 
 export type WeatherReport = {
