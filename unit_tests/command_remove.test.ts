@@ -27,6 +27,7 @@ function createTestState(overrides: Partial<State> = {}): State {
             closeCache: vi.fn(),
         } as any,
         summaryList: {},
+        summaryOrder: [],
         ...overrides,
     };
 }
@@ -37,18 +38,21 @@ beforeEach(() => {
 });
 
 describe("commandRemove", () => {
-    test("removes a location from the summary list", async () => {
+    test("removes a location from the summary list and order", async () => {
         const state = createTestState({
             summaryList: { "oslo,no": mockLocation },
+            summaryOrder: ["oslo,no"],
         });
         await commandRemove(state, "oslo");
         expect(state.summaryList["oslo,no"]).toBeUndefined();
+        expect(state.summaryOrder).not.toContain("oslo,no");
         expect(saveConfig).toHaveBeenCalledOnce();
     });
 
     test("prints confirmation after removing", async () => {
         const state = createTestState({
             summaryList: { "oslo,no": mockLocation },
+            summaryOrder: ["oslo,no"],
         });
         await commandRemove(state, "oslo");
         expect(console.log).toHaveBeenCalledWith(expect.stringContaining("removed from summary list"));

@@ -2,7 +2,9 @@ import { State } from "../cli/state.js";
 import { formatWeatherReport } from "../utils/formatWeatherReport.js";
 
 export async function commandSummary(state: State) {
-    const locations = Object.values(state.summaryList);
+    const locations = state.summaryOrder
+        .map(key => state.summaryList[key])
+        .filter(Boolean);
     if (locations.length === 0) {
         console.log("Summary list is empty.");
         return;

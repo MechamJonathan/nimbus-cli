@@ -9,18 +9,26 @@ const CONFIG_FILE = join(CONFIG_DIR, "config.json");
 export type Config = {
     units: "metric" | "imperial";
     summaryList: Record<string, Location>;
+    summaryOrder: string[];
 };
 
 const DEFAULT_CONFIG: Config = {
     units: "imperial",
     summaryList: {},
+    summaryOrder: [],
 };
 
 export function loadConfig(): Config {
     try {
         const raw = readFileSync(CONFIG_FILE, "utf-8");
         const parsed = JSON.parse(raw) as Partial<Config>;
-        return { ...DEFAULT_CONFIG, ...parsed };
+        const config = { ...DEFAULT_CONFIG, ...parsed };
+        // migrate: if summaryOrder is missing but summaryList has entries,
+        // reconstruct the order from the existing keys
+        if (config.summaryOrder.length === 0 && Object.keys(config.summaryList).length > 0) {
+            config.summaryOrder = Object.keys(config.summaryList);
+        }
+        return config;
     } catch {
         return { ...DEFAULT_CONFIG };
     }

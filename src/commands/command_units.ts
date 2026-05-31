@@ -18,5 +18,5 @@ export async function commandUnits(state: State, ...args: string[]): Promise<voi
         console.log("Unknown units. Use 'c'/'celsius' or 'f'/'fahrenheit'");
         return;
     }
-    saveConfig({ units: state.units, summaryList: state.summaryList });
+    saveConfig({ units: state.units, summaryList: state.summaryList, summaryOrder: state.summaryOrder });
 }

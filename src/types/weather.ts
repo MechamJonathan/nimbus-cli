@@ -8,6 +8,29 @@ export type Location = {
     local_names?: Record<string, string>;
 };
 
+export type ForecastEntry = {
+    dt: number;
+    dt_txt: string;
+    main: {
+        temp: number;
+        feels_like: number;
+        temp_min: number;
+        temp_max: number;
+        pressure: number;
+        humidity: number;
+    };
+    weather: { id: number; main: string; description: string; icon: string }[];
+    wind?: { speed?: number; deg?: number };
+    clouds?: { all: number };
+    rain?: { "3h"?: number };
+    snow?: { "3h"?: number };
+};
+
+export type ForecastResponse = {
+    list: ForecastEntry[];
+    city: { name: string; country: string; timezone: number };
+};
+
 export type WeatherReport = {
     coord: { lon: number; lat: number };
     weather: { id: number; main: string; description: string; icon: string }[];

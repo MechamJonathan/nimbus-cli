@@ -27,6 +27,7 @@ function createTestState(overrides: Partial<State> = {}): State {
             closeCache: vi.fn(),
         } as any,
         summaryList: {},
+        summaryOrder: [],
         ...overrides,
     };
 }
@@ -37,10 +38,11 @@ beforeEach(() => {
 });
 
 describe("commandAdd", () => {
-    test("adds a location to the summary list", async () => {
+    test("adds a location to the summary list and order", async () => {
         const state = createTestState();
         await commandAdd(state, "oslo");
         expect(state.summaryList["oslo,no"]).toEqual(mockLocation);
+        expect(state.summaryOrder).toContain("oslo,no");
         expect(saveConfig).toHaveBeenCalledOnce();
     });
 
