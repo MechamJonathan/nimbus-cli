@@ -5,9 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "npx tsc",
-    "start": "node dist/main.js",
-    "dev": "npx tsc && node dist/main.js",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && npx tsc",
+    "start": "npm run build && node dist/main.js",
+    "dev": "npm run build && node dist/main.js",
     "test": "vitest --run"
   },
   "repository": {
