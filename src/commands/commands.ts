@@ -6,6 +6,8 @@ import { commandUnits } from "./command_units.js";
 import { commandAdd } from "./command_add.js";
 import { commandSummary } from "./command_summary.js";
 import { commandRemove } from "./command_remove.js";
+import { commandForecast } from "./command_forecast.js";
+import { commandClear } from "./command_clear.js";
 
 export function getCommands(): Record<string, CLICommand> {
     return {
@@ -61,7 +63,21 @@ export function getCommands(): Record<string, CLICommand> {
             description: `Display summary list weather report
     Usage: summary`,
             callback: commandSummary,
-        }
-
+        },
+        clear: {
+            name: "clear",
+            description: `Clear all locations from the summary list.
+    Usage: clear`,
+            callback: commandClear,
+        },
+        forecast: {
+            name: "forecast",
+            description: `Display a 5-day forecast for a city.
+    Usage: forecast <city> [state] [country]
+        Examples:
+        forecast Oslo
+        forecast Salt Lake City UT US`,
+            callback: commandForecast,
+        },
     }
 }

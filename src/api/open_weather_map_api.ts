@@ -1,10 +1,11 @@
 import { Cache } from "./cache.js";
-import { Location, WeatherReport } from "../types/weather.js";
+import { Location, WeatherReport, ForecastResponse } from "../types/weather.js";
 import 'dotenv/config';
 
 export class OpenWeatherMapAPI {
     private readonly apiKey: string;
     private static readonly baseURL = "https://api.openweathermap.org/data/2.5/weather?";
+    private static readonly baseForecastURL = "https://api.openweathermap.org/data/2.5/forecast?";
     private static readonly baseGeoCodeURL = "http://api.openweathermap.org/geo/1.0/direct?"
     private cache: Cache;
 
@@ -83,6 +84,36 @@ export class OpenWeatherMapAPI {
             return data;
         } catch (err) {
             throw new Error(`Error fetching weather report: ${(err as Error).message}`);
+        }
+    }
+
+    async fetchForecastByCity(
+        city: string,
+        state?: string,
+        country?: string,
+        units: "metric" | "imperial" = "imperial",
+    ): Promise<{ location: Location; forecast: ForecastResponse }> {
+        const location = await this.fetchLocation(city, state, country);
+
+        const cacheKey = `forecast:${location.lat},${location.lon},${units}`;
+        const cached = this.cache.get<ForecastResponse>(cacheKey);
+        if (cached) {
+            return { location, forecast: cached };
+        }
+
+        const fullURL = OpenWeatherMapAPI.baseForecastURL +
+            `lat=${location.lat}&lon=${location.lon}&appid=${this.apiKey}&units=${units}`;
+
+        try {
+            const resp = await fetch(fullURL);
+            if (!resp.ok) {
+                throw new Error(`${resp.status} ${resp.statusText}`);
+            }
+            const forecast = (await resp.json()) as ForecastResponse;
+            this.cache.add(cacheKey, forecast);
+            return { location, forecast };
+        } catch (err) {
+            throw new Error(`Error fetching forecast: ${(err as Error).message}`);
         }
     }
 

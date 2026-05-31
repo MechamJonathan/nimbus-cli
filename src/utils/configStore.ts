@@ -9,11 +9,13 @@ const CONFIG_FILE = join(CONFIG_DIR, "config.json");
 export type Config = {
     units: "metric" | "imperial";
     summaryList: Record<string, Location>;
+    summaryOrder: string[];
 };
 
 const DEFAULT_CONFIG: Config = {
     units: "imperial",
     summaryList: {},
+    summaryOrder: [],
 };
 
 export function loadConfig(): Config {

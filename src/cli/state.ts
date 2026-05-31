@@ -15,8 +15,8 @@ export type State = {
     registry: Record<string, CLICommand>,
     openWeatherMapAPI: OpenWeatherMapAPI,
     units: "metric" | "imperial";
-    summaryList: Record<string, Location>
-
+    summaryList: Record<string, Location>;
+    summaryOrder: string[];
 };
 
 export function initState(cacheInterval: number): State {
@@ -35,5 +35,6 @@ export function initState(cacheInterval: number): State {
         openWeatherMapAPI: new OpenWeatherMapAPI(cacheInterval),
         units: config.units,
         summaryList: config.summaryList,
+        summaryOrder: config.summaryOrder,
     };
 };
