@@ -49,7 +49,7 @@ export function formatForecast(
         divider,
     ].join("\n");
 
-    const days = groupByDay(forecast.list, timezoneOffset);
+    const days = groupByDay(forecast.list, timezoneOffset).slice(0, 5);
 
     const dayBlocks = days.map(({ label, entries }) => {
         const temps  = entries.map(e => e.main.temp);
