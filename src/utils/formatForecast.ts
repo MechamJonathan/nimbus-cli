@@ -45,7 +45,7 @@ export function formatForecast(
 
     const header = [
         `  ${pc.dim(pc.green("LOCATION :"))} ${pc.bold(pc.cyan(location))}`,
-        `  ${pc.dim(pc.green("FORECAST  :"))} ${pc.dim(pc.green("5-DAY BRIEFING"))}`,
+        `  ${pc.dim(pc.green("FORECAST  :"))} ${pc.dim(pc.green("5-DAY"))}`,
         divider,
     ].join("\n");
 
