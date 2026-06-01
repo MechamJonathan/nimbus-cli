@@ -1,6 +1,8 @@
 import { parseCityFromTokens } from "../utils/parseCityFromTokens.js";
 import { State } from "../cli/state.js";
 import { formatWeatherReport } from "../utils/formatWeatherReport.js";
+import { Spinner } from "../utils/spinner.js";
+import { parseApiError } from "../utils/parseApiError.js";
 
 export async function commandWeather(state: State, ...args: string[]): Promise<void> {
     if (args.length < 1) {
@@ -9,13 +11,16 @@ export async function commandWeather(state: State, ...args: string[]): Promise<v
     }
 
     const { city, state: st, country } = parseCityFromTokens(args);
-    try{
+    const spinner = new Spinner(`Fetching weather for ${city}...`);
+    spinner.start();
+    try {
         const { location, weather } = await state.openWeatherMapAPI.fetchWeatherByCity(city, st, country, state.units);
-
+        spinner.stop();
         console.log();
         console.log(formatWeatherReport(state, location.name, location.country, weather, location.state));
         console.log();
     } catch (err) {
-        console.log(`Could not find weather for "${city}"`, err);
+        spinner.stop();
+        console.log(parseApiError(err, city));
     }
 }

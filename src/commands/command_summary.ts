@@ -1,5 +1,7 @@
 import { State } from "../cli/state.js";
 import { formatWeatherReport } from "../utils/formatWeatherReport.js";
+import { Spinner } from "../utils/spinner.js";
+import { parseApiError } from "../utils/parseApiError.js";
 
 export async function commandSummary(state: State) {
     const locations = Object.values(state.summaryList);
@@ -9,14 +11,17 @@ export async function commandSummary(state: State) {
     }
 
     for (const loc of locations) {
-        try{
+        const spinner = new Spinner(`Fetching weather for ${loc.name}...`);
+        spinner.start();
+        try {
             const { weather } = await state.openWeatherMapAPI.fetchWeatherByCity(loc.name, loc.state, loc.country, state.units);
+            spinner.stop();
             console.log();
             console.log(formatWeatherReport(state, loc.name, loc.country, weather, loc.state));
             console.log();
         } catch (err) {
-            console.log(`Could not fetch weather for ${loc.name}: ${(err as Error).message}`);
-
+            spinner.stop();
+            console.log(parseApiError(err, loc.name));
         }
     }
 }
