@@ -8,6 +8,7 @@ import { commandSummary } from "./command_summary.js";
 import { commandRemove } from "./command_remove.js";
 import { commandForecast } from "./command_forecast.js";
 import { commandClear } from "./command_clear.js";
+import { commandDefault } from "./command_default.js";
 
 export function getCommands(): Record<string, CLICommand> {
     return {
@@ -78,6 +79,17 @@ export function getCommands(): Record<string, CLICommand> {
         forecast Oslo
         forecast Salt Lake City UT US`,
             callback: commandForecast,
+        },
+        default: {
+            name: "default",
+            description: `Set or clear the default city shown on startup.
+    Usage: default <city> [state] [country]
+           default unset
+           default
+        Examples:
+        default Salt Lake City UT US
+        default unset`,
+            callback: commandDefault,
         },
     }
 }

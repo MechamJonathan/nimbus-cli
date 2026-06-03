@@ -7,7 +7,7 @@ function resizeTerminal(cols: number, rows: number) {
     }
 }
 
-function main() {
+async function main() {
     // Snapshot original size before expanding
     const originalCols = process.stdout.columns ?? 80;
     const originalRows = process.stdout.rows ?? 24;
@@ -21,7 +21,7 @@ function main() {
     process.on("SIGINT", () => { restore(); process.exit(0); });
 
     const state = initState(1000 * 60 * 5); // 5 minutes
-    startREPL(state);
+    await startREPL(state);
 }
 
 main();

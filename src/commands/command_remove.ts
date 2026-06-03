@@ -34,7 +34,7 @@ export async function commandRemove(state: State, ...args: string[]): Promise<vo
 
     delete state.summaryList[key];
     state.summaryOrder = state.summaryOrder.filter(k => k !== key);
-    saveConfig({ units: state.units, summaryList: state.summaryList, summaryOrder: state.summaryOrder });
+    saveConfig({ units: state.units, summaryList: state.summaryList, summaryOrder: state.summaryOrder, defaultCity: state.defaultCity });
 
     console.log(
         `${location.name}${location.state ? ", " + location.state : ""}, ${location.country} removed from summary list.`
