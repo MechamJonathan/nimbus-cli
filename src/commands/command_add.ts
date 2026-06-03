@@ -28,6 +28,6 @@ export async function commandAdd(state: State, ...args: string[]): Promise<void>
 
     state.summaryList[key] = location;
     state.summaryOrder.push(key);
-    saveConfig({ units: state.units, summaryList: state.summaryList, summaryOrder: state.summaryOrder });
+    saveConfig({ units: state.units, summaryList: state.summaryList, summaryOrder: state.summaryOrder, defaultCity: state.defaultCity });
     console.log(`${location.name}${location.state ? ", " + location.state : ""}, ${location.country} added to summary list.`);
 }

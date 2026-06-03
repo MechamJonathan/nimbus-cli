@@ -17,6 +17,7 @@ export type State = {
     units: "metric" | "imperial";
     summaryList: Record<string, Location>;
     summaryOrder: string[];
+    defaultCity: Location | null;
 };
 
 export function initState(cacheInterval: number): State {
@@ -36,5 +37,6 @@ export function initState(cacheInterval: number): State {
         units: config.units,
         summaryList: config.summaryList,
         summaryOrder: config.summaryOrder,
+        defaultCity: config.defaultCity,
     };
 };

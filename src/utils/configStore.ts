@@ -10,12 +10,14 @@ export type Config = {
     units: "metric" | "imperial";
     summaryList: Record<string, Location>;
     summaryOrder: string[];
+    defaultCity: Location | null;
 };
 
 const DEFAULT_CONFIG: Config = {
     units: "imperial",
     summaryList: {},
     summaryOrder: [],
+    defaultCity: null,
 };
 
 export function loadConfig(): Config {

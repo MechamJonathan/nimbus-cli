@@ -9,6 +9,6 @@ export async function commandClear(state: State): Promise<void> {
 
     state.summaryList = {};
     state.summaryOrder = [];
-    saveConfig({ units: state.units, summaryList: {}, summaryOrder: [] });
+    saveConfig({ units: state.units, summaryList: {}, summaryOrder: [], defaultCity: state.defaultCity });
     console.log("Summary list cleared.");
 }
